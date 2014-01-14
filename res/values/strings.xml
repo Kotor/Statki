@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">StatkiKuby</string>
+    <string name="app_name">Statki</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="kontynuacja">Kontynuacja</string>
+    <string name="nowaGra">Nowa gra</string>
+    <string name="informacje">Informacje</string>
+    <string name="wyjscie">Wyjście</string>
+    <string name="informacjeTresc">Gra stworzona w ramach projektu na zajęcia
+         z Nowoczesnych Języków Programowania Obiektowego. Gra polega na zatopieniu
+         statków przeciwnika odgadując ich położenie na planszy.</string>    
 
 </resources>
