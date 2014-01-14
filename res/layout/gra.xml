@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/weatherFragRoot"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:orientation="horizontal" >
+
+	<GridView 
+	    android:id="@+id/gridview"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:numColumns="10" > 
+    </GridView>
+    
+	
+	<ImageView
+        android:id="@+id/cztero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:contentDescription="Czteromasztowiec"
+        android:layout_below="@id/gridview"
+        android:src="@drawable/cztero" />
+	<TextView
+        android:id="@+id/czteroLiczba"
+        android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:layout_toRightOf="@id/cztero"
+    	android:layout_below="@id/gridview" />
+	<ImageView
+        android:id="@+id/troj"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:contentDescription="Trójmasztowiec"
+        android:layout_below="@id/cztero"
+        android:src="@drawable/troj" />
+		<TextView
+        android:id="@+id/trojLiczba"
+        android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:layout_toRightOf="@id/troj"
+    	android:layout_below="@id/cztero" />
+	<ImageView
+        android:id="@+id/dwu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:contentDescription="Dwumasztowiec"
+        android:layout_below="@id/troj"
+        android:src="@drawable/dwu" />
+		<TextView
+        android:id="@+id/dwuLiczba"
+        android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:layout_toRightOf="@id/dwu"
+    	android:layout_below="@id/troj" />
+	<ImageView
+        android:id="@+id/jedno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:contentDescription="Jednomasztowiec"
+        android:layout_below="@id/dwu"
+        android:src="@drawable/jedno" />
+		<TextView
+        android:id="@+id/jednoLiczba"
+        android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:layout_toRightOf="@id/jedno"
+    	android:layout_below="@id/dwu" />
+   	
+
+</RelativeLayout>
