@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 public class Gra extends Activity {
 	private ArrayList<Integer> plansza;
-	int cztero = 1, troj = 2, dwu = 3, jedno = 4;
+	int cztero = 0, troj = 0, dwu = 0, jedno = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,12 +64,13 @@ public class Gra extends Activity {
 					wartosci.add(4);
 				}
 				if (wartosci.isEmpty()) wartosci.add(0);
-				if (sprawdzCzyPuste(wartosci, position)) {
-					ustawPole(position, imageView);
+				if (sprawdzCzyPuste(wartosci, position)) {					
+					ustawPole(position, imageView);					
 				} else {
 					Toast.makeText(getApplicationContext(),
 							"Statki nie mog¹ siê stykaæ ze sob¹.",Toast.LENGTH_SHORT).show();
-				}
+				}				
+				sprawdzPlansze(plansza);
 			}
 			
 			private boolean sprawdzCzyPuste(ArrayList<Integer> wartosci, int position) {
@@ -99,69 +100,70 @@ public class Gra extends Activity {
 					}
 				}
 				for (Integer b : wartosciDoSprawdzenia) {
-					Log.i("position", Integer.toString(position+b));
 					if (plansza.get(position + b) != 1) return false;
 				}
 				return true;
+			}
+			
+			private void sprawdzPlansze(ArrayList<Integer> plansza) {
+				for (int i=0; i<100; i++) {	
+					Log.i("i", Integer.toString(plansza.get(i)));
+				}
+				jedno = 0;
+				int b;
+				ArrayList<Integer> plansza2 = plansza;
+				//Log.i("Liczba", Integer.toString(jedno));
+				for (int i=0; i<100; i++) {						
+					b = i;
+					if (plansza2.get(b) == 2) {
+						plansza2.set(b, 1);
+						if (plansza2.get(b++) == 2) {
+							plansza2.set(b++, 1);
+							if (plansza2.get(b+2) == 2) {
+								plansza2.set(b+2, 1);
+								if (plansza2.get(b+3) == 2) {
+									plansza2.set(b+3, 1);
+									if (plansza2.get(b+4) == 2) {
+										plansza2.set(b+4, 1);
+										cztero++;
+									}
+								} else {
+									troj++;
+								}
+							} else {
+								dwu++;
+							}
+						} else if (plansza2.get(b+10) == 2) {
+							plansza2.set(b+10, 1);
+							if (plansza2.get(b+20) == 2) {
+								plansza2.set(b+20, 1);
+								if (plansza2.get(b+30) == 2) {
+									plansza2.set(b+30, 1);
+									if (plansza2.get(b+40) == 2) {
+										plansza2.set(b+40, 1);
+										cztero++;
+									}
+								} else {
+									troj++;
+								}
+							} else {
+								dwu++;
+							}
+						} else {
+							jedno++;							
+						}
+					}					
+				}	
+				//Log.i("LiczbaPo", Integer.toString(jedno));
 			}
 			
 			private void ustawPole(int position, ImageView imageView) {
 				if (plansza.get(position) == 1) {
 					imageView.setImageResource(R.drawable.wybrane);
 					plansza.set(position, 2);
-					if ((position > 0 && plansza.get(position - 1) == 2) 
-							|| (position < 99 && plansza.get(position + 1) == 2)
-							|| (position > 9 && plansza.get(position - 10) == 2) 
-							|| (position < 90 && plansza.get(position + 10) == 2 )) {
-						dwu--;
-						jedno++;
-						if ((position > 1 && plansza.get(position - 1) == 2 && plansza.get(position - 2) == 2)
-								|| (position < 98 && plansza.get(position + 1) == 2 && plansza.get(position + 2) == 2)
-								|| (position > 19 && plansza.get(position - 10) == 2 && plansza.get(position - 20) == 2)
-								|| (position < 80 && plansza.get(position + 10) == 2 && plansza.get(position + 20) == 2)) {
-							troj--;
-							dwu += 2;
-							jedno--;
-							if ((position > 2 && plansza.get(position - 3) == 2)
-									|| (position < 97 && plansza.get(position + 3) == 2) 
-									|| (position > 29 && plansza.get(position - 30) == 2)
-									|| (position < 70 && plansza.get(position + 30) == 2)) {
-								cztero--;
-								troj += 2;
-								dwu--;
-							}
-						}
-					} else {
-						jedno--;
-					}
-				} else {
+				} else if (plansza.get(position) == 2) {
 					imageView.setImageResource(R.drawable.pole);
-					plansza.set(position, 1);
-					if ((position > 0 && plansza.get(position - 1) == 2)
-							|| (position < 99 && plansza.get(position + 1) == 2)
-							|| (position > 9 && plansza.get(position - 10) == 2)
-							|| (position < 90 && plansza.get(position + 10) == 2)) {
-						dwu++;
-						jedno--;
-						if ((position > 1 && plansza.get(position - 1) == 2 && plansza.get(position - 2) == 2)
-								|| (position < 98 && plansza.get(position + 1) == 2 && plansza.get(position + 2) == 2)
-								|| (position > 19 && plansza.get(position - 10) == 2 && plansza.get(position - 20) == 2)
-								|| (position < 80 && plansza.get(position + 10) == 2 && plansza.get(position + 20) == 2)) {
-							troj++;
-							dwu -= 2;
-							jedno++;
-							if ((position > 2 && plansza.get(position - 3) == 2)
-									|| (position < 97 && plansza.get(position + 3) == 2)
-									|| (position > 29 && plansza.get(position - 30) == 2)
-									|| (position < 70 && plansza.get(position + 30) == 2)) {
-								cztero++;
-								troj -= 2;
-								dwu++;
-							}
-						}
-					} else {
-						jedno++;
-					}
+					plansza.set(position, 1);					
 				}
 			}
 		});
