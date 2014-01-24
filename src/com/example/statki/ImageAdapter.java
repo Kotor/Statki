@@ -9,6 +9,7 @@ import android.widget.ImageView;
  
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
+    private int screenWidth;
  
     // Keep all Images in array
     public Integer[] mThumbIds = {
@@ -65,8 +66,9 @@ public class ImageAdapter extends BaseAdapter {
     };
  
     // Constructor
-    public ImageAdapter(Context c){
+    public ImageAdapter(Context c, int screenWidthParam){
         mContext = c;
+        this.screenWidth = screenWidthParam;
     }
  
     @Override
@@ -86,10 +88,11 @@ public class ImageAdapter extends BaseAdapter {
  
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+    	int gridWidth = screenWidth/10;
         ImageView imageView = new ImageView(mContext);
         imageView.setImageResource(mThumbIds[position]);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageView.setLayoutParams(new GridView.LayoutParams(80, 80));
+        imageView.setLayoutParams(new GridView.LayoutParams(gridWidth, gridWidth));
         imageView.setPadding(0, 0, 0, 0);
         return imageView;
     }
