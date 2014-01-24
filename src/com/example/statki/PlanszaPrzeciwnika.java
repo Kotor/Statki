@@ -19,17 +19,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Gra extends Activity implements OnClickListener {
-	private ArrayList<Integer> plansza;
+public class PlanszaPrzeciwnika extends Activity implements OnClickListener {
+	private ArrayList<Integer> planszaPrzeciwnika;
 	int cztero = 0, troj = 0, dwu = 0, jedno = 0;
-	private Button right;
+	private Button left;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.gra);
+		setContentView(R.layout.przeciwnik);
 		Plansza.inst().wyczyscPlansze();
-		plansza = Plansza.inst().getPlanszaGry();
+		planszaPrzeciwnika = Plansza.inst().getPlanszaGry();
     	
     	Display display = getWindowManager().getDefaultDisplay();
 		Rect rect = new Rect();
@@ -45,14 +45,14 @@ public class Gra extends Activity implements OnClickListener {
 		dwuTxt.setText(Integer.toString(dwu));
 		final TextView jednoTxt = (TextView) findViewById(R.id.jednoLiczba);
 		jednoTxt.setText(Integer.toString(jedno));
-		right = (Button) this.findViewById(R.id.right);
-		right.setOnClickListener(this);
-
+		left = (Button) this.findViewById(R.id.left);
+		left.setOnClickListener(this);
+				
 		gridView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View imgView,
 					int position, long id) {
 				ImageView imageView = (ImageView) imgView;
-
+				
 				wyborPola(position, imageView);
 				
 				czteroTxt.setText(Integer.toString(cztero));
@@ -60,7 +60,7 @@ public class Gra extends Activity implements OnClickListener {
 				dwuTxt.setText(Integer.toString(dwu));
 				jednoTxt.setText(Integer.toString(jedno));
 			}
-
+			
 			private void wyborPola(int position, ImageView imageView) {
 				ArrayList<Integer> wartosci = new ArrayList<Integer>();
 				if (position%10 == 0) {
@@ -82,7 +82,7 @@ public class Gra extends Activity implements OnClickListener {
 					Toast.makeText(getApplicationContext(),
 							"Statki nie mog¹ siê stykaæ ze sob¹.",Toast.LENGTH_SHORT).show();
 				}
-				sprawdzPlansze(plansza);
+				sprawdzPlansze(planszaPrzeciwnika);
 			}
 			
 			private boolean sprawdzCzyMozna(ArrayList<Integer> wartosci, int position) {
@@ -112,7 +112,7 @@ public class Gra extends Activity implements OnClickListener {
 					}
 				}
 				for (Integer b : wartosciDoSprawdzenia) {
-					if (plansza.get(position + b) != 1) return false;
+					if (planszaPrzeciwnika.get(position + b) != 1) return false;
 				}
 				return true;
 			}
@@ -162,55 +162,63 @@ public class Gra extends Activity implements OnClickListener {
 					if (a == 10) {
 						if (plansza2.get(position+10) == 2) {							
 							dwu++;
-							zeruj (plansza2, position, 0, 0, 0, 1, 0, 0);
+							plansza2.set(position+10, 1);
 						} else jedno++;
 					}
 					if (a == 20) {
 						if (plansza2.get(position+10) == 2 && plansza2.get(position+20) == 2) {								
 							troj++;
-							zeruj (plansza2, position, 0, 0, 0, 1, 1, 0);
+							plansza2.set(position+10, 1);
+							plansza2.set(position+20, 1);
 						} else if (plansza2.get(position+10) == 2) {							
 							dwu++;	
-							zeruj (plansza2, position, 0, 0, 0, 1, 0, 0);
+							plansza2.set(position+10, 1);
 						} else jedno++;
 					}					
 					if (a == 30) {
 						if (plansza2.get(position+10) == 2 && plansza2.get(position+20) == 2 && plansza2.get(position+30) == 2) {
 							cztero++;
-							zeruj (plansza2, position, 0, 0, 0, 1, 1, 1);
+							plansza2.set(position+10, 1);
+							plansza2.set(position+20, 1);
+							plansza2.set(position+30, 1);
 						}else if (plansza2.get(position+10) == 2 && plansza2.get(position+20) == 2) {								
 							troj++;
-							zeruj (plansza2, position, 0, 0, 0, 1, 1, 0);
+							plansza2.set(position+10, 1);
+							plansza2.set(position+20, 1);
 						}else if (plansza2.get(position+10) == 2) {							
 							dwu++;	
-							zeruj (plansza2, position, 0, 0, 0, 1, 0, 0);
+							plansza2.set(position+10, 1);
 						} else jedno++;	
 					}
 					if (a == 1) {
 						if (plansza2.get(position+1) == 2) {							
 							dwu++;
-							zeruj (plansza2, position, 1, 0, 0, 0, 0, 0);
+							plansza2.set(position+1, 1);
 						} else if (position > 89) jedno++;	
 					}
 					if (a == 2) {
 						if (plansza2.get(position+1) == 2 && plansza2.get(position+2) == 2) {								
 							troj++;
-							zeruj (plansza2, position, 1, 1, 0, 0, 0, 0);
+							plansza2.set(position+1, 1);
+							plansza2.set(position+2, 1);
 						} else if (plansza2.get(position+1) == 2) {							
 							dwu++;	
-							zeruj (plansza2, position, 1, 0, 0, 0, 0, 0);
+							plansza2.set(position+1, 1);
 						} else if (position > 89) jedno++;	
 					}					
 					if (a == 3) {
 						if (plansza2.get(position+1) == 2 && plansza2.get(position+2) == 2 && plansza2.get(position+3) == 2) {
 							cztero++;
-							zeruj (plansza2, position, 1, 1, 1, 0, 0, 0);
+							plansza2.set(position+1, 1);
+							plansza2.set(position+2, 1);
+							plansza2.set(position+3, 1);
 						}else if (plansza2.get(position+1) == 2 && plansza2.get(position+2) == 2) {								
 							troj++;
-							zeruj (plansza2, position, 1, 1, 0, 0, 0, 0);
+							plansza2.set(position+1, 1);
+							plansza2.set(position+2, 1);
 						}else if (plansza2.get(position+1) == 2) {							
 							dwu++;	
-							zeruj (plansza2, position, 1, 0, 0, 0, 0, 0);
+							plansza2.set(position+1, 1);
 						} else if (position > 89) jedno++;	
 					}	
 					if (a == 0) {
@@ -220,22 +228,13 @@ public class Gra extends Activity implements OnClickListener {
 				}
 			}
 			
-			private void zeruj(ArrayList<Integer> plansza2, int position, int a, int b, int c, int d, int e, int f) {
-				if (a != 0) plansza2.set(position+1, 1);
-				if (b != 0) plansza2.set(position+2, 1);
-				if (c != 0) plansza2.set(position+3, 1);
-				if (d != 0) plansza2.set(position+10, 1);
-				if (e != 0) plansza2.set(position+20, 1);
-				if (f != 0) plansza2.set(position+30, 1);
-			}
-			
 			private void ustawPole(int position, ImageView imageView) {
-				if (plansza.get(position) == 1) {
+				if (planszaPrzeciwnika.get(position) == 1) {
 					imageView.setImageResource(R.drawable.wybrane);
-					plansza.set(position, 2);
-				} else if (plansza.get(position) == 2) {
+					planszaPrzeciwnika.set(position, 2);
+				} else if (planszaPrzeciwnika.get(position) == 2) {
 					imageView.setImageResource(R.drawable.pole);
-					plansza.set(position, 1);					
+					planszaPrzeciwnika.set(position, 1);					
 				}
 			}
 		});
@@ -243,19 +242,17 @@ public class Gra extends Activity implements OnClickListener {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		Intent intent=new Intent();
-		if(v.getId() == R.id.right) {
-			intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-			intent.setClassName(this,"com.example.statki.PlanszaPrzeciwnika");
+		if (v.getId() == R.id.left) {			
+			intent.setClassName(this,"com.example.statki.Gra");
 			startActivity(intent);
-			this.overridePendingTransition(R.anim.from_right, R.anim.to_left);
+			this.overridePendingTransition(R.anim.from_left, R.anim.to_right);		
 		}
 	}
 }

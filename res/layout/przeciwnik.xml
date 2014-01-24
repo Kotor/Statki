@@ -74,12 +74,12 @@ android:orientation="horizontal" >
     	android:layout_toRightOf="@id/jedno"
     	android:layout_below="@id/dwu" />
    	
-	<Button
-        android:id="@+id/right"
+    <Button
+        android:id="@+id/left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/jednoLiczba"
         android:layout_centerHorizontal="true"
-        android:text="Plansza przeciwnika" />
+        android:text="Plansza gracza" />
 
 </RelativeLayout>
