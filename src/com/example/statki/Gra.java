@@ -7,11 +7,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -25,6 +25,7 @@ public class Gra extends Activity implements OnClickListener {
 	int cztero = 0, troj = 0, dwu = 0, jedno = 0;
 	private Button zatwierdz, right;
 	boolean zatwierdzPlansze = false;
+	GridView gridView = (GridView) findViewById(R.id.gridview);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,7 @@ public class Gra extends Activity implements OnClickListener {
 		Display display = getWindowManager().getDefaultDisplay();
 		Rect rect = new Rect();
 		display.getRectSize(rect);
-		GridView gridView = (GridView) findViewById(R.id.gridview);
+		//GridView gridView = (GridView) findViewById(R.id.gridview);
 		gridView.setAdapter(new ImageAdapter(this, rect.width()));
 		final TextView czteroTxt = (TextView) findViewById(R.id.czteroLiczba);
 		czteroTxt.setText(Integer.toString(cztero));
@@ -51,14 +52,13 @@ public class Gra extends Activity implements OnClickListener {
 		zatwierdz = (Button) this.findViewById(R.id.zatwierdz);
 		zatwierdz.setOnClickListener(this);
 		right.setVisibility(View.GONE);
-
-		
+				
 		gridView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View imgView,
 					int position, long id) {
 				if (!zatwierdzPlansze) {
 					ImageView imageView = (ImageView) imgView;
-
+					
 					wyborPola(position, imageView);
 
 					czteroTxt.setText(Integer.toString(cztero));
@@ -70,24 +70,29 @@ public class Gra extends Activity implements OnClickListener {
 		});
 	}
 	
-	public void strzal(View imgView, ArrayList<Integer> plansza) {
-		
-		ImageView imageView = (ImageView) imgView;
+	public void strzal(ArrayList<Integer> plansza) {		
 		Random losuj = new Random();
 		int position = losuj.nextInt(100);
-		Log.i("position", Integer.toString(position));
-		if (plansza.get(position) == 2) {
-			imageView.setImageResource(R.drawable.trafiony);
+		ViewGroup gridChild = (ViewGroup) gridView.getChildAt(position);
+		int childSize = gridChild.getChildCount();
+		for (int k = 0; k < childSize; k++) {
+			if (gridChild.getChildAt(k) instanceof ImageView) {
+				ImageView imV = (ImageView) gridChild.getChildAt(k);
+				imV.setImageResource(R.drawable.wybrane);
+			}
+		}
+		/*if (plansza.get(position) == 2) {
+			imV.setImageResource(R.drawable.trafiony);
 			plansza.set(position, 4);
-			strzal(imgView, plansza);
+			strzal(plansza);
 		} else if (plansza.get(position) == 1) {
-			imageView.setImageResource(R.drawable.pudlo);
+			imV.setImageResource(R.drawable.pudlo);
 			plansza.set(position, 3);
 			Intent intent = new Intent();
 			intent.setClassName(getApplicationContext(),"com.example.statki.PlanszaPrzeciwnika");
 			startActivity(intent);
 			overridePendingTransition(R.anim.from_right, R.anim.to_left);
-		}
+		}*/
 	}
 
 	private void wyborPola(int position, ImageView imageView) {
