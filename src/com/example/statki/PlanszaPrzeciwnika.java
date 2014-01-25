@@ -46,7 +46,7 @@ public class PlanszaPrzeciwnika extends Activity implements OnClickListener {
 		left.setOnClickListener(this);
 		
 		ustawPlansze(planszaPrzeciwnika);
-		
+				
 		czteroTxt.setText(Integer.toString(cztero));
 		trojTxt.setText(Integer.toString(troj));
 		dwuTxt.setText(Integer.toString(dwu));
@@ -58,22 +58,22 @@ public class PlanszaPrzeciwnika extends Activity implements OnClickListener {
 				ImageView imageView = (ImageView) imgView;
 
 				strzal(position, imageView);
-			}
-
-			private void strzal(int position, ImageView imageView) {
-				if (planszaPrzeciwnika.get(position) == 2) {
-					imageView.setImageResource(R.drawable.trafiony);
-					planszaPrzeciwnika.set(position, 4);
-				} else if (planszaPrzeciwnika.get(position) == 1) {
-					imageView.setImageResource(R.drawable.pudlo);
-					planszaPrzeciwnika.set(position, 3);
-					Intent intent = new Intent();
-					intent.setClassName(getApplicationContext(),"com.example.statki.Gra");
-					startActivity(intent);
-					overridePendingTransition(R.anim.from_left, R.anim.to_right);
-				}
-			}			
+			}		
 		});
+	}
+	
+	private void strzal(int position, ImageView imageView) {
+		if (planszaPrzeciwnika.get(position) == 2) {
+			imageView.setImageResource(R.drawable.trafiony);
+			planszaPrzeciwnika.set(position, 4);
+		} else if (planszaPrzeciwnika.get(position) == 1) {
+			imageView.setImageResource(R.drawable.pudlo);
+			planszaPrzeciwnika.set(position, 3);
+			Intent intent = new Intent();
+			intent.setClassName(getApplicationContext(),"com.example.statki.Gra");
+			startActivity(intent);
+			overridePendingTransition(R.anim.from_left, R.anim.to_right);
+		}
 	}
 
 	private void ustawPlansze(ArrayList<Integer> plansza) {
