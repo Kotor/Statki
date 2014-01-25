@@ -1,19 +1,20 @@
 package com.example.statki;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class PlanszaPrzeciwnika extends Activity implements OnClickListener {
@@ -31,7 +32,6 @@ public class PlanszaPrzeciwnika extends Activity implements OnClickListener {
     	Display display = getWindowManager().getDefaultDisplay();
 		Rect rect = new Rect();
     	display.getRectSize(rect);
-    	Log.i("width", Integer.toString(rect.width()));
     	GridView gridView = (GridView) findViewById(R.id.gridview);
 		gridView.setAdapter(new ImageAdapter(this, rect.width()));
 		final TextView czteroTxt = (TextView) findViewById(R.id.czteroLiczba);
@@ -45,14 +45,60 @@ public class PlanszaPrzeciwnika extends Activity implements OnClickListener {
 		left = (Button) this.findViewById(R.id.left);
 		left.setOnClickListener(this);
 		
-		ustawCztero(planszaPrzeciwnika);
-
+		ustawPlansze(planszaPrzeciwnika);
+		
 		czteroTxt.setText(Integer.toString(cztero));
 		trojTxt.setText(Integer.toString(troj));
 		dwuTxt.setText(Integer.toString(dwu));
 		jednoTxt.setText(Integer.toString(jedno));
+		
+		gridView.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View imgView,
+					int position, long id) {
+				ImageView imageView = (ImageView) imgView;
+
+				strzal(position, imageView);
+			}
+
+			private void strzal(int position, ImageView imageView) {
+				if (planszaPrzeciwnika.get(position) == 2) {
+					imageView.setImageResource(R.drawable.trafiony);
+					planszaPrzeciwnika.set(position, 4);
+				} else if (planszaPrzeciwnika.get(position) == 1) {
+					imageView.setImageResource(R.drawable.pudlo);
+					planszaPrzeciwnika.set(position, 3);
+					Intent intent = new Intent();
+					intent.setClassName(getApplicationContext(),"com.example.statki.Gra");
+					startActivity(intent);
+					overridePendingTransition(R.anim.from_left, R.anim.to_right);
+				}
+			}			
+		});
 	}
 
+	private void ustawPlansze(ArrayList<Integer> plansza) {
+		plansza.set(3, 2);
+		plansza.set(18, 2);
+		plansza.set(22, 2);
+		plansza.set(23, 2);
+		plansza.set(24, 2);
+		plansza.set(25, 2);
+		plansza.set(28, 2);
+		plansza.set(41, 2);
+		plansza.set(44, 2);
+		plansza.set(45, 2);
+		plansza.set(49, 2);
+		plansza.set(51, 2);
+		plansza.set(61, 2);
+		plansza.set(66, 2);
+		plansza.set(67, 2);
+		plansza.set(68, 2);
+		plansza.set(83, 2);
+		plansza.set(86, 2);
+		plansza.set(88, 2);
+		plansza.set(93, 2);
+	}
+	/*
 	private void ustawCztero(ArrayList<Integer> plansza) {
 		Random losuj = new Random();
 		int liczba;
@@ -234,7 +280,7 @@ public class PlanszaPrzeciwnika extends Activity implements OnClickListener {
 		if (d != 0) plansza2.set(position+10, 1);
 		if (e != 0) plansza2.set(position+20, 1);
 		if (f != 0) plansza2.set(position+30, 1);
-	}
+	}*/
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -244,8 +290,8 @@ public class PlanszaPrzeciwnika extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		Intent intent=new Intent();
-		if (v.getId() == R.id.left) {			
+		Intent intent = new Intent();
+		if (v.getId() == R.id.left) {
 			intent.setClassName(this,"com.example.statki.Gra");
 			startActivity(intent);
 			this.overridePendingTransition(R.anim.from_left, R.anim.to_right);		

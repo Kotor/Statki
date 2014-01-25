@@ -74,19 +74,12 @@ android:orientation="horizontal" >
     	android:layout_toRightOf="@id/jedno"
     	android:layout_below="@id/dwu" />
    	
-	<Button
+    <Button
         android:id="@+id/right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/jednoLiczba"
         android:layout_centerHorizontal="true"
         android:text="Plansza przeciwnika" />
-	<Button
-        android:id="@+id/zatwierdz"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/gridview"
-        android:layout_centerHorizontal="true"
-        android:text="Zatwierdź statki" />
 
 </RelativeLayout>
