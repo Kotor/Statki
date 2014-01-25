@@ -184,7 +184,7 @@ public class Gra extends Activity implements OnClickListener {
 						}else if (plansza2.get(position+10) == 2) {							
 							dwu++;	
 							zeruj (plansza2, position, 0, 0, 0, 1, 0, 0);
-						} else jedno++;	
+						} else jedno++;
 					}
 					if (a == 1) {
 						if (plansza2.get(position+1) == 2) {							
@@ -215,8 +215,7 @@ public class Gra extends Activity implements OnClickListener {
 					}	
 					if (a == 0) {
 						jedno++;
-					}
-					plansza2.set(position, 1);
+					}					
 				}
 			}
 			
