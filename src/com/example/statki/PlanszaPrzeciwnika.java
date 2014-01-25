@@ -69,6 +69,7 @@ public class PlanszaPrzeciwnika extends Activity implements OnClickListener {
 		} else if (planszaPrzeciwnika.get(position) == 1) {
 			imageView.setImageResource(R.drawable.pudlo);
 			planszaPrzeciwnika.set(position, 3);
+			// STRZA£
 			Intent intent = new Intent();
 			intent.setClassName(getApplicationContext(),"com.example.statki.Gra");
 			startActivity(intent);

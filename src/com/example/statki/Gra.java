@@ -1,11 +1,13 @@
 package com.example.statki;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.View;
@@ -19,7 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class Gra extends Activity implements OnClickListener {
-	private ArrayList<Integer> plansza;
+	public ArrayList<Integer> plansza;
 	int cztero = 0, troj = 0, dwu = 0, jedno = 0;
 	private Button zatwierdz, right;
 	boolean zatwierdzPlansze = false;
@@ -48,11 +50,13 @@ public class Gra extends Activity implements OnClickListener {
 		right.setOnClickListener(this);
 		zatwierdz = (Button) this.findViewById(R.id.zatwierdz);
 		zatwierdz.setOnClickListener(this);
+		right.setVisibility(View.GONE);
 
-		if (!zatwierdzPlansze) {
-			gridView.setOnItemClickListener(new OnItemClickListener() {
-				public void onItemClick(AdapterView<?> parent, View imgView,
-						int position, long id) {
+		
+		gridView.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View imgView,
+					int position, long id) {
+				if (!zatwierdzPlansze) {
 					ImageView imageView = (ImageView) imgView;
 
 					wyborPola(position, imageView);
@@ -61,11 +65,30 @@ public class Gra extends Activity implements OnClickListener {
 					trojTxt.setText(Integer.toString(troj));
 					dwuTxt.setText(Integer.toString(dwu));
 					jednoTxt.setText(Integer.toString(jedno));
-				}
-			});
+				}				
+			}
+		});
+	}
+	
+	public void strzal(View imgView, ArrayList<Integer> plansza) {
+		
+		ImageView imageView = (ImageView) imgView;
+		Random losuj = new Random();
+		int position = losuj.nextInt(100);
+		Log.i("position", Integer.toString(position));
+		if (plansza.get(position) == 2) {
+			imageView.setImageResource(R.drawable.trafiony);
+			plansza.set(position, 4);
+			strzal(imgView, plansza);
+		} else if (plansza.get(position) == 1) {
+			imageView.setImageResource(R.drawable.pudlo);
+			plansza.set(position, 3);
+			Intent intent = new Intent();
+			intent.setClassName(getApplicationContext(),"com.example.statki.PlanszaPrzeciwnika");
+			startActivity(intent);
+			overridePendingTransition(R.anim.from_right, R.anim.to_left);
 		}
 	}
-		
 
 	private void wyborPola(int position, ImageView imageView) {
 		ArrayList<Integer> wartosci = new ArrayList<Integer>();
@@ -294,6 +317,8 @@ public class Gra extends Activity implements OnClickListener {
 		} else if (v.getId() == R.id.zatwierdz) {
 			if (cztero == 1 && troj == 2 && dwu == 3 && jedno == 4) {
 				zatwierdzPlansze = true;
+				zatwierdz.setVisibility(View.GONE);
+				right.setVisibility(View.VISIBLE);
 				intent.setClassName(getApplicationContext(),
 						"com.example.statki.PlanszaPrzeciwnika");
 				startActivity(intent);
