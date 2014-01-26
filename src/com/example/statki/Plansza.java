@@ -2,11 +2,13 @@ package com.example.statki;
 
 import java.util.ArrayList;
 
+import android.util.Log;
+
 public class Plansza {
 	private static Plansza inst;	
 	private ArrayList<Integer> planszaGry;
 	private Plansza() {
-		//wyczyscPlansze();
+		wyczyscPlansze();
 	}
 	
 	public static synchronized Plansza inst() {
@@ -16,7 +18,7 @@ public class Plansza {
 		return inst;
 	}
 
-	public ArrayList<Integer> getPlanszaGry() {
+	public ArrayList<Integer> getPlanszaGry() {		
 		return planszaGry;
 	}
 

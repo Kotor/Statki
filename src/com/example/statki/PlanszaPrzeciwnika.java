@@ -47,35 +47,32 @@ public class PlanszaPrzeciwnika extends Activity implements OnClickListener {
 				ImageView imageView = (ImageView) imgView;
 				int a = 0;
 				do {
-					Log.i("a", "x");
 					a = strzal(position, imageView);
-				} while (a != 0);
+					Log.i("a", Integer.toString(a));
+				} while (a == 0);
 			}		
 		});
 	}
 	
 	private int strzal(int position, ImageView imageView) {
-		if (planszaPrzeciwnika.get(position) == 2) {	
-			Log.i("a", "y");
+		if (planszaPrzeciwnika.get(position) == 2) {
 			imageView.setImageResource(R.drawable.trafiony);
 			wszystkie--;
 			planszaPrzeciwnika.set(position, 4);
-			//niedostepnePola(position);
+			niedostepnePola(position);
 			if (wszystkie == 0) {
 				Toast.makeText(getApplicationContext(),
 						"Wygra³eœ!", Toast.LENGTH_SHORT).show();
 			}
 			return 1;
 		} else if (planszaPrzeciwnika.get(position) == 1) {
-			Log.i("a", "z");
 			imageView.setImageResource(R.drawable.pudlo);
-			planszaPrzeciwnika.set(position, 3);			
+			planszaPrzeciwnika.set(position, 3);
 			Intent intent = new Intent();
+			Gra.strzal();
 			intent.setClassName(getApplicationContext(),"com.example.statki.Gra");
 			startActivity(intent);
-			overridePendingTransition(R.anim.from_left, R.anim.to_right);
-			Gra.getInst().strzal();
-			return 0;
+			overridePendingTransition(R.anim.from_left, R.anim.to_right);			
 		} else if (planszaPrzeciwnika.get(position) == 3) {
 			return 1;
 		} else if (planszaPrzeciwnika.get(position) == 4) {

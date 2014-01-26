@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,33 +21,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class Gra extends Activity implements OnClickListener {
-	private static Gra inst;      
-    private Gra() {  
-          
-   }
-   
-    public static synchronized Gra inst() {
-           if (inst == null) {
-                  inst = new Gra();
-          }
-           return inst ;
-   }
-
-	public static Gra getInst() {
-		return inst;
-	}
-
-	public static void setInst(Gra inst) {
-		Gra.inst = inst;
-	}
-
-	public ArrayList<Integer> plansza;
-	int cztero = 1, troj = 2, dwu = 3, jedno = 4, wszystkie = 20;
+	public static ArrayList<Integer> plansza;
+	static int cztero = 1;
+	static int troj = 2;
+	static int dwu = 3;
+	static int jedno = 4;
+	static int wszystkie = 20;
 	private Button zatwierdz, right;
 	private TextView czteroTxt, trojTxt, dwuTxt, jednoTxt, dostepne;
 	private ImageView czteroMaszt, trojMaszt, dwuMaszt, jednoMaszt;
 	boolean zatwierdzPlansze = false;
-	GridView gridView;
+	static GridView gridView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -98,22 +83,24 @@ public class Gra extends Activity implements OnClickListener {
 		});
 	}
 	
-	public void strzal() {
+	public static void strzal() {	
 		Random losuj = new Random();
-		int position = losuj.nextInt(100);		
+		int position = losuj.nextInt(100);
 		View myTopView = gridView.getChildAt(position);
-	    ArrayList<View> allViewsWithinMyTopView = getAllChildren(myTopView);	    
+		ArrayList<View> allViewsWithinMyTopView = getAllChildren(myTopView);	    
 	    for (View child : allViewsWithinMyTopView) {
 	    	if (child instanceof ImageView) {
-	        	ImageView imV = (ImageView) child;
-	        	if (plansza.get(position) == 2) {	        		
+	    		ImageView imV = (ImageView) child;
+	    		Log.i("b", "c");
+	        	Log.i("a", Integer.toString(plansza.get(position)));
+	        	if (plansza.get(position) == 2) {
+	        		Log.i("a", "k1");
 					imV.setImageResource(R.drawable.trafiony);
 					wszystkie--;
 					plansza.set(position, 4);
 					wyborPola(position, imV, "niedostepne");
 					if (wszystkie == 0) {						
-						Toast.makeText(getApplicationContext(),
-								"Przegra³eœ!", Toast.LENGTH_SHORT).show();
+						//Toast.makeText(getApplicationContext(), "Przegra³eœ!", Toast.LENGTH_SHORT).show();
 					}
 					strzal();
 				} else if (plansza.get(position) == 1) {					
@@ -121,7 +108,7 @@ public class Gra extends Activity implements OnClickListener {
 					plansza.set(position, 3);
 				} else if (plansza.get(position) == 3) {
 					strzal();
-				}else if (plansza.get(position) == 4) {
+				} else if (plansza.get(position) == 4) {
 					strzal();
 				}
 	        }
@@ -146,7 +133,7 @@ public class Gra extends Activity implements OnClickListener {
 		return result;
 	}
 
-	private void wyborPola(int position, ImageView imageView, String wybor) {
+	private static void wyborPola(int position, ImageView imageView, String wybor) {
 		ArrayList<Integer> wartosci = new ArrayList<Integer>();
 		if (position % 10 == 0) {
 			wartosci.add(1);
@@ -166,15 +153,13 @@ public class Gra extends Activity implements OnClickListener {
 			if (sprawdzCzyMozna(wartosci, position, "pole")) {
 				ustawPole(position, imageView);
 			} else {
-				Toast.makeText(getApplicationContext(),
-						"Statki nie mog¹ siê stykaæ ze sob¹.",
-						Toast.LENGTH_SHORT).show();
+				//Toast.makeText(getApplicationContext(), "Statki nie mog¹ siê stykaæ ze sob¹.", Toast.LENGTH_SHORT).show();
 			}
 			sprawdzPlansze(plansza);
 		} else if (wybor.equals("niedostepne")) sprawdzCzyMozna(wartosci, position, wybor);
 	}
 
-	private boolean sprawdzCzyMozna(ArrayList<Integer> wartosci, int position, String wybor) {
+	private static boolean sprawdzCzyMozna(ArrayList<Integer> wartosci, int position, String wybor) {
 		ArrayList<Integer> wartosciDoSprawdzenia = new ArrayList<Integer>();
 		for (Integer a : wartosci) {
 			if (a == 0) {
@@ -232,7 +217,7 @@ public class Gra extends Activity implements OnClickListener {
 		return true;
 	}
 			
-	private void sprawdzPlansze(ArrayList<Integer> plansza) {
+	private static void sprawdzPlansze(ArrayList<Integer> plansza) {
 		jedno = 4;
 		dwu = 3;
 		troj = 2;
@@ -248,7 +233,7 @@ public class Gra extends Activity implements OnClickListener {
 		}
 	}
 
-	private void sprawdzPole(int position, ArrayList<Integer> plansza2) {
+	private static void sprawdzPole(int position, ArrayList<Integer> plansza2) {
 		ArrayList<Integer> wartosci = new ArrayList<Integer>();
 		if (position / 10 == 8) {
 			wartosci.add(10);
@@ -273,7 +258,7 @@ public class Gra extends Activity implements OnClickListener {
 		ustawLiczbe(wartosci, position, plansza2);
 	}
 
-	public void ustawLiczbe(ArrayList<Integer> wartosci, int position,
+	public static void ustawLiczbe(ArrayList<Integer> wartosci, int position,
 			ArrayList<Integer> plansza2) {
 		for (Integer a : wartosci) {
 			if (a == 10) {
@@ -365,7 +350,7 @@ public class Gra extends Activity implements OnClickListener {
 		if (f != 0) plansza2.set(position + 30, 1);
 	}
 
-	private void ustawPole(int position, ImageView imageView) {
+	private static void ustawPole(int position, ImageView imageView) {
 		if (plansza.get(position) == 1) {
 			imageView.setImageResource(R.drawable.wybrane);
 			plansza.set(position, 2);
