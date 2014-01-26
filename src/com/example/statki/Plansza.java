@@ -2,8 +2,6 @@ package com.example.statki;
 
 import java.util.ArrayList;
 
-import android.util.Log;
-
 public class Plansza {
 	private static Plansza inst;	
 	private ArrayList<Integer> planszaGry;
@@ -26,8 +24,7 @@ public class Plansza {
 		this.planszaGry = planszaGry;
 	}
 	
-	public void wyczyscPlansze() {
-		Log.i("czyszczenie", "a");
+	public void wyczyscPlansze() {		
 		planszaGry = new ArrayList<Integer>();
 		for (int i = 0; i<100; i++) {
 			planszaGry.add(1);

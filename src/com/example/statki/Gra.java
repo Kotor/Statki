@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.Display;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -21,14 +20,34 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class Gra extends Activity implements OnClickListener {
-	public static ArrayList<Integer> plansza;
-	int cztero = 0, troj = 0, dwu = 0, jedno = 0;
+	private static Gra inst;      
+    private Gra() {  
+          
+   }
+   
+    public static synchronized Gra inst() {
+           if (inst == null) {
+                  inst = new Gra();
+          }
+           return inst ;
+   }
+
+	public static Gra getInst() {
+		return inst;
+	}
+
+	public static void setInst(Gra inst) {
+		Gra.inst = inst;
+	}
+
+	public ArrayList<Integer> plansza;
+	int cztero = 1, troj = 2, dwu = 3, jedno = 4, wszystkie = 20;
 	private Button zatwierdz, right;
-	private TextView czteroTxt, trojTxt, dwuTxt, jednoTxt;
+	private TextView czteroTxt, trojTxt, dwuTxt, jednoTxt, dostepne;
 	private ImageView czteroMaszt, trojMaszt, dwuMaszt, jednoMaszt;
 	boolean zatwierdzPlansze = false;
-	static GridView gridView;
-
+	GridView gridView;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -41,6 +60,7 @@ public class Gra extends Activity implements OnClickListener {
 		display.getRectSize(rect);
 		gridView = (GridView) findViewById(R.id.gridview);
 		gridView.setAdapter(new ImageAdapter(this, rect.width()));
+		dostepne = (TextView) findViewById(R.id.dostepne);
 		czteroTxt = (TextView) findViewById(R.id.czteroLiczba);
 		czteroTxt.setText(Integer.toString(cztero));
 		czteroMaszt = (ImageView) findViewById(R.id.cztero);
@@ -67,7 +87,7 @@ public class Gra extends Activity implements OnClickListener {
 				if (!zatwierdzPlansze) {
 					ImageView imageView = (ImageView) imgView;
 					
-					wyborPola(position, imageView);
+					wyborPola(position, imageView, "pole");
 
 					czteroTxt.setText(Integer.toString(cztero));
 					trojTxt.setText(Integer.toString(troj));
@@ -78,7 +98,7 @@ public class Gra extends Activity implements OnClickListener {
 		});
 	}
 	
-	public static void strzal() {
+	public void strzal() {
 		Random losuj = new Random();
 		int position = losuj.nextInt(100);		
 		View myTopView = gridView.getChildAt(position);
@@ -88,11 +108,21 @@ public class Gra extends Activity implements OnClickListener {
 	        	ImageView imV = (ImageView) child;
 	        	if (plansza.get(position) == 2) {	        		
 					imV.setImageResource(R.drawable.trafiony);
+					wszystkie--;
 					plansza.set(position, 4);
+					wyborPola(position, imV, "niedostepne");
+					if (wszystkie == 0) {						
+						Toast.makeText(getApplicationContext(),
+								"Przegra³eœ!", Toast.LENGTH_SHORT).show();
+					}
 					strzal();
 				} else if (plansza.get(position) == 1) {					
 					imV.setImageResource(R.drawable.pudlo);
 					plansza.set(position, 3);
+				} else if (plansza.get(position) == 3) {
+					strzal();
+				}else if (plansza.get(position) == 4) {
+					strzal();
 				}
 	        }
 	    }	    
@@ -116,7 +146,7 @@ public class Gra extends Activity implements OnClickListener {
 		return result;
 	}
 
-	private void wyborPola(int position, ImageView imageView) {
+	private void wyborPola(int position, ImageView imageView, String wybor) {
 		ArrayList<Integer> wartosci = new ArrayList<Integer>();
 		if (position % 10 == 0) {
 			wartosci.add(1);
@@ -132,16 +162,19 @@ public class Gra extends Activity implements OnClickListener {
 		}
 		if (wartosci.isEmpty())
 			wartosci.add(0);
-		if (sprawdzCzyMozna(wartosci, position)) {
-			ustawPole(position, imageView);
-		} else {
-			Toast.makeText(getApplicationContext(),
-					"Statki nie mog¹ siê stykaæ ze sob¹.", Toast.LENGTH_SHORT).show();
-		}
-		sprawdzPlansze(plansza);
+		if (wybor.equals("pole")) {
+			if (sprawdzCzyMozna(wartosci, position, "pole")) {
+				ustawPole(position, imageView);
+			} else {
+				Toast.makeText(getApplicationContext(),
+						"Statki nie mog¹ siê stykaæ ze sob¹.",
+						Toast.LENGTH_SHORT).show();
+			}
+			sprawdzPlansze(plansza);
+		} else if (wybor.equals("niedostepne")) sprawdzCzyMozna(wartosci, position, wybor);
 	}
 
-	private boolean sprawdzCzyMozna(ArrayList<Integer> wartosci, int position) {
+	private boolean sprawdzCzyMozna(ArrayList<Integer> wartosci, int position, String wybor) {
 		ArrayList<Integer> wartosciDoSprawdzenia = new ArrayList<Integer>();
 		for (Integer a : wartosci) {
 			if (a == 0) {
@@ -175,18 +208,35 @@ public class Gra extends Activity implements OnClickListener {
 					wartosciDoSprawdzenia.add(-9);
 			}
 		}
-		for (Integer b : wartosciDoSprawdzenia) {
-			if (plansza.get(position + b) != 1)
-				return false;
+		if (wybor.equals("pole")) {
+			for (Integer b : wartosciDoSprawdzenia) {
+				if (plansza.get(position + b) != 1)
+					return false;
+			}
+			return true;
+		} else if (wybor.equals("niedostepne")) {
+			for (Integer b : wartosciDoSprawdzenia) {
+				plansza.set(position + b, 3);
+				View myTopView = gridView.getChildAt(position + b);
+				ArrayList<View> allViewsWithinMyTopView = getAllChildren(myTopView);
+				for (View child : allViewsWithinMyTopView) {
+					if (child instanceof ImageView) {
+						ImageView imV = (ImageView) child;
+						if (plansza.get(position+b) == 3) {
+							imV.setImageResource(R.drawable.pudlo);
+						}
+					}
+				}
+			}
 		}
 		return true;
 	}
 			
 	private void sprawdzPlansze(ArrayList<Integer> plansza) {
-		jedno = 0;
-		dwu = 0;
-		troj = 0;
-		cztero = 0;
+		jedno = 4;
+		dwu = 3;
+		troj = 2;
+		cztero = 1;
 		ArrayList<Integer> plansza2 = new ArrayList<Integer>();
 		for (int i = 0; i < 100; i++) {
 			plansza2.add(plansza.get(i));
@@ -228,79 +278,84 @@ public class Gra extends Activity implements OnClickListener {
 		for (Integer a : wartosci) {
 			if (a == 10) {
 				if (plansza2.get(position + 10) == 2) {
-					dwu++;
+					dwu--;
 					zeruj(plansza2, position, 0, 0, 0, 1, 0, 0);
 				} else
-					jedno++;
+					jedno--;
 			}
 			if (a == 20) {
 				if (plansza2.get(position + 10) == 2
 						&& plansza2.get(position + 20) == 2) {
-					troj++;
+					troj--;
 					zeruj(plansza2, position, 0, 0, 0, 1, 1, 0);
 				} else if (plansza2.get(position + 10) == 2) {
-					dwu++;
+					dwu--;
 					zeruj(plansza2, position, 0, 0, 0, 1, 0, 0);
 				} else
-					jedno++;
+					jedno--;
 			}
 			if (a == 30) {
 				if (plansza2.get(position + 10) == 2
 						&& plansza2.get(position + 20) == 2
 						&& plansza2.get(position + 30) == 2) {
-					cztero++;
+					cztero--;
 					zeruj(plansza2, position, 0, 0, 0, 1, 1, 1);
 				} else if (plansza2.get(position + 10) == 2
 						&& plansza2.get(position + 20) == 2) {
-					troj++;
+					troj--;
 					zeruj(plansza2, position, 0, 0, 0, 1, 1, 0);
 				} else if (plansza2.get(position + 10) == 2) {
-					dwu++;
+					dwu--;
 					zeruj(plansza2, position, 0, 0, 0, 1, 0, 0);
 				} else
-					jedno++;
+					jedno--;
 			}
 			if (a == 1) {
 				if (plansza2.get(position + 1) == 2) {
-					dwu++;
-					zeruj(plansza2, position, 1, 0, 0, 0, 0, 0);
-				} else if (position > 89)
+					dwu--;
 					jedno++;
+					zeruj(plansza2, position, 1, 0, 0, 0, 0, 0);
+				} if (position > 89)
+					jedno--;
 			}
 			if (a == 2) {
 				if (plansza2.get(position + 1) == 2
 						&& plansza2.get(position + 2) == 2) {
-					troj++;
+					troj--;
 					zeruj(plansza2, position, 1, 1, 0, 0, 0, 0);
 				} else if (plansza2.get(position + 1) == 2) {
-					dwu++;
-					zeruj(plansza2, position, 1, 0, 0, 0, 0, 0);
-				} else if (position > 89)
+					dwu--;
 					jedno++;
+					zeruj(plansza2, position, 1, 0, 0, 0, 0, 0);
+				} if (position > 89)
+					jedno--;
 			}
 			if (a == 3) {
 				if (plansza2.get(position + 1) == 2
 						&& plansza2.get(position + 2) == 2
 						&& plansza2.get(position + 3) == 2) {
-					cztero++;
+					cztero--;
+					jedno++;
 					zeruj(plansza2, position, 1, 1, 1, 0, 0, 0);
 				} else if (plansza2.get(position + 1) == 2
 						&& plansza2.get(position + 2) == 2) {
-					troj++;
+					troj--;
+					jedno++;
 					zeruj(plansza2, position, 1, 1, 0, 0, 0, 0);
 				} else if (plansza2.get(position + 1) == 2) {
-					dwu++;
-					zeruj(plansza2, position, 1, 0, 0, 0, 0, 0);
-				} else if (position > 89)
+					dwu--;
 					jedno++;
+					zeruj(plansza2, position, 1, 0, 0, 0, 0, 0);
+				} if (position > 89)
+					jedno--;
 			}
 			if (a == 0) {
-				jedno++;
+				jedno--;
 			}
 		}
 	}
 
-	private void zeruj(ArrayList<Integer> plansza2, int position, int a, int b,
+	private static void zeruj(ArrayList<Integer> plansza2, int position, int a, int b,
 			int c, int d, int e, int f) {
 		if (a != 0) plansza2.set(position + 1, 1);
 		if (b != 0) plansza2.set(position + 2, 1);
@@ -319,13 +374,6 @@ public class Gra extends Activity implements OnClickListener {
 			plansza.set(position, 1);
 		}
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
 	
 	@Override
 	public void onClick(View v) {
@@ -335,10 +383,11 @@ public class Gra extends Activity implements OnClickListener {
 			startActivity(intent);
 			this.overridePendingTransition(R.anim.from_right, R.anim.to_left);
 		} else if (v.getId() == R.id.zatwierdz) {
-			if (cztero == 1 && troj == 2 && dwu == 3 && jedno == 4) {
+			if (cztero == 0 && troj == 0 && dwu == 0 && jedno == 0) {
 				zatwierdzPlansze = true;
 				zatwierdz.setVisibility(View.GONE);
 				right.setVisibility(View.VISIBLE);
+				dostepne.setVisibility(View.GONE);
 				czteroTxt.setVisibility(View.GONE);
 				czteroMaszt.setVisibility(View.GONE);
 				trojTxt.setVisibility(View.GONE);

@@ -12,7 +12,12 @@ android:orientation="horizontal" >
 	    android:numColumns="10" > 
     </GridView>
     
-	
+	<TextView
+        android:id="@+id/dostepne"
+        android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:layout_below="@id/gridview"
+    	android:text="Dostępne statki:" />
 	<ImageView
         android:id="@+id/cztero"
         android:layout_width="wrap_content"
@@ -20,14 +25,14 @@ android:orientation="horizontal" >
         android:paddingBottom="5dp"
         android:paddingTop="5dp"
         android:contentDescription="Czteromasztowiec"
-        android:layout_below="@id/gridview"
+        android:layout_below="@id/dostepne"
         android:src="@drawable/cztero" />
 	<TextView
         android:id="@+id/czteroLiczba"
         android:layout_width="fill_parent"
     	android:layout_height="wrap_content"
     	android:layout_toRightOf="@id/cztero"
-    	android:layout_below="@id/gridview" />
+    	android:layout_below="@id/dostepne" />
 	<ImageView
         android:id="@+id/troj"
         android:layout_width="wrap_content"

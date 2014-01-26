@@ -6,20 +6,23 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class PlanszaPrzeciwnika extends Activity implements OnClickListener {
 	private ArrayList<Integer> planszaPrzeciwnika;
-	int cztero = 0, troj = 0, dwu = 0, jedno = 0;
+	int cztero = 0, troj = 0, dwu = 0, jedno = 0, wszystkie = 20;
 	private Button left;
+	GridView gridView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +34,7 @@ public class PlanszaPrzeciwnika extends Activity implements OnClickListener {
     	Display display = getWindowManager().getDefaultDisplay();
 		Rect rect = new Rect();
     	display.getRectSize(rect);
-    	GridView gridView = (GridView) findViewById(R.id.gridview);
+    	gridView = (GridView) findViewById(R.id.gridview);
 		gridView.setAdapter(new ImageAdapter(this, rect.width()));		
 		left = (Button) this.findViewById(R.id.left);
 		left.setOnClickListener(this);
@@ -44,6 +47,7 @@ public class PlanszaPrzeciwnika extends Activity implements OnClickListener {
 				ImageView imageView = (ImageView) imgView;
 				int a = 0;
 				do {
+					Log.i("a", "x");
 					a = strzal(position, imageView);
 				} while (a != 0);
 			}		
@@ -51,18 +55,31 @@ public class PlanszaPrzeciwnika extends Activity implements OnClickListener {
 	}
 	
 	private int strzal(int position, ImageView imageView) {
-		if (planszaPrzeciwnika.get(position) == 2) {			
+		if (planszaPrzeciwnika.get(position) == 2) {	
+			Log.i("a", "y");
 			imageView.setImageResource(R.drawable.trafiony);
+			wszystkie--;
 			planszaPrzeciwnika.set(position, 4);
+			//niedostepnePola(position);
+			if (wszystkie == 0) {
+				Toast.makeText(getApplicationContext(),
+						"Wygra³eœ!", Toast.LENGTH_SHORT).show();
+			}
 			return 1;
-		} else if (planszaPrzeciwnika.get(position) == 1) {			
+		} else if (planszaPrzeciwnika.get(position) == 1) {
+			Log.i("a", "z");
 			imageView.setImageResource(R.drawable.pudlo);
 			planszaPrzeciwnika.set(position, 3);			
 			Intent intent = new Intent();
 			intent.setClassName(getApplicationContext(),"com.example.statki.Gra");
 			startActivity(intent);
-			overridePendingTransition(R.anim.from_left, R.anim.to_right);			
-			Gra.strzal();
+			overridePendingTransition(R.anim.from_left, R.anim.to_right);
+			Gra.getInst().strzal();
+			return 0;
+		} else if (planszaPrzeciwnika.get(position) == 3) {
+			return 1;
+		} else if (planszaPrzeciwnika.get(position) == 4) {
+			return 1;
 		}
 		return 0;
 	}
@@ -273,12 +290,92 @@ public class PlanszaPrzeciwnika extends Activity implements OnClickListener {
 		if (f != 0) plansza2.set(position+30, 1);
 	}*/
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+	private void niedostepnePola(int position) {
+		ArrayList<Integer> wartosci = new ArrayList<Integer>();
+		if (position % 10 == 0) {
+			wartosci.add(1);
+		}
+		if (position % 10 == 9) {
+			wartosci.add(2);
+		}
+		if (position < 10) {
+			wartosci.add(3);
+		}
+		if (position > 89) {
+			wartosci.add(4);
+		}
+		if (wartosci.isEmpty())
+			wartosci.add(0);
+		ustawNiedostepne(wartosci, position);
 	}
-
+	
+	private void ustawNiedostepne(ArrayList<Integer> wartosci, int position) {
+		ArrayList<Integer> wartosciDoSprawdzenia = new ArrayList<Integer>();
+		for (Integer a : wartosci) {
+			if (a == 0) {
+				wartosciDoSprawdzenia.add(-11);
+				wartosciDoSprawdzenia.add(-9);
+				wartosciDoSprawdzenia.add(9);
+				wartosciDoSprawdzenia.add(11);
+			}
+			if (a == 1) {
+				if (position != 0)
+					wartosciDoSprawdzenia.add(-9);
+				if (position != 90)
+					wartosciDoSprawdzenia.add(11);
+			}
+			if (a == 2) {
+				if (position != 9)
+					wartosciDoSprawdzenia.add(-11);
+				if (position != 99)
+					wartosciDoSprawdzenia.add(9);
+			}
+			if (a == 3) {
+				if (position != 0)
+					wartosciDoSprawdzenia.add(9);
+				if (position != 9)
+					wartosciDoSprawdzenia.add(11);
+			}
+			if (a == 4) {
+				if (position != 89)
+					wartosciDoSprawdzenia.add(-11);
+				if (position != 99)
+					wartosciDoSprawdzenia.add(-9);
+			}
+		}
+		for (Integer b : wartosciDoSprawdzenia) {
+			planszaPrzeciwnika.set(position + b, 3);
+			View myTopView = gridView.getChildAt(position + b);
+			ArrayList<View> allViewsWithinMyTopView = getAllChildren(myTopView);
+			for (View child : allViewsWithinMyTopView) {
+				if (child instanceof ImageView) {
+					ImageView imV = (ImageView) child;
+					if (planszaPrzeciwnika.get(position+b) == 3) {
+						imV.setImageResource(R.drawable.pudlo);
+					}
+				}
+			}
+		}
+	}
+	
+	private static ArrayList<View> getAllChildren(View v) {
+		if (!(v instanceof ViewGroup)) {
+			ArrayList<View> viewArrayList = new ArrayList<View>();
+			viewArrayList.add(v);
+			return viewArrayList;
+		}
+		ArrayList<View> result = new ArrayList<View>();
+		ViewGroup vg = (ViewGroup) v;
+		for (int i = 0; i < vg.getChildCount(); i++) {
+			View child = vg.getChildAt(i);
+			ArrayList<View> viewArrayList = new ArrayList<View>();
+			viewArrayList.add(v);
+			viewArrayList.addAll(getAllChildren(child));
+			result.addAll(viewArrayList);
+		}
+		return result;
+	}
+	
 	@Override
 	public void onClick(View v) {
 		Intent intent = new Intent();
