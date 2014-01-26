@@ -15,7 +15,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 public class PlanszaPrzeciwnika extends Activity implements OnClickListener {
 	private ArrayList<Integer> planszaPrzeciwnika;
@@ -33,50 +32,39 @@ public class PlanszaPrzeciwnika extends Activity implements OnClickListener {
 		Rect rect = new Rect();
     	display.getRectSize(rect);
     	GridView gridView = (GridView) findViewById(R.id.gridview);
-		gridView.setAdapter(new ImageAdapter(this, rect.width()));
-		final TextView czteroTxt = (TextView) findViewById(R.id.czteroLiczba);
-		czteroTxt.setText(Integer.toString(cztero));
-		final TextView trojTxt = (TextView) findViewById(R.id.trojLiczba);
-		trojTxt.setText(Integer.toString(troj));
-		final TextView dwuTxt = (TextView) findViewById(R.id.dwuLiczba);
-		dwuTxt.setText(Integer.toString(dwu));
-		final TextView jednoTxt = (TextView) findViewById(R.id.jednoLiczba);
-		jednoTxt.setText(Integer.toString(jedno));
+		gridView.setAdapter(new ImageAdapter(this, rect.width()));		
 		left = (Button) this.findViewById(R.id.left);
 		left.setOnClickListener(this);
 		
 		ustawPlansze(planszaPrzeciwnika);
-				
-		czteroTxt.setText(Integer.toString(cztero));
-		trojTxt.setText(Integer.toString(troj));
-		dwuTxt.setText(Integer.toString(dwu));
-		jednoTxt.setText(Integer.toString(jedno));
 		
 		gridView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View imgView,
 					int position, long id) {
 				ImageView imageView = (ImageView) imgView;
-
-				strzal(position, imageView);
+				int a = 0;
+				do {
+					a = strzal(position, imageView);
+				} while (a != 0);
 			}		
 		});
 	}
 	
-	private void strzal(int position, ImageView imageView) {
-		if (planszaPrzeciwnika.get(position) == 2) {
+	private int strzal(int position, ImageView imageView) {
+		if (planszaPrzeciwnika.get(position) == 2) {			
 			imageView.setImageResource(R.drawable.trafiony);
 			planszaPrzeciwnika.set(position, 4);
-		} else if (planszaPrzeciwnika.get(position) == 1) {
+			return 1;
+		} else if (planszaPrzeciwnika.get(position) == 1) {			
 			imageView.setImageResource(R.drawable.pudlo);
-			planszaPrzeciwnika.set(position, 3);
-			// TO DO: STRZA£
-			Gra n = new Gra();
-			n.strzal(n.plansza);
+			planszaPrzeciwnika.set(position, 3);			
 			Intent intent = new Intent();
 			intent.setClassName(getApplicationContext(),"com.example.statki.Gra");
 			startActivity(intent);
-			overridePendingTransition(R.anim.from_left, R.anim.to_right);
+			overridePendingTransition(R.anim.from_left, R.anim.to_right);			
+			Gra.strzal();
 		}
+		return 0;
 	}
 
 	private void ustawPlansze(ArrayList<Integer> plansza) {

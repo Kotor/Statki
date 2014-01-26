@@ -21,11 +21,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class Gra extends Activity implements OnClickListener {
-	public ArrayList<Integer> plansza;
+	public static ArrayList<Integer> plansza;
 	int cztero = 0, troj = 0, dwu = 0, jedno = 0;
 	private Button zatwierdz, right;
+	private TextView czteroTxt, trojTxt, dwuTxt, jednoTxt;
+	private ImageView czteroMaszt, trojMaszt, dwuMaszt, jednoMaszt;
 	boolean zatwierdzPlansze = false;
-	GridView gridView = (GridView) findViewById(R.id.gridview);
+	static GridView gridView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,21 +39,27 @@ public class Gra extends Activity implements OnClickListener {
 		Display display = getWindowManager().getDefaultDisplay();
 		Rect rect = new Rect();
 		display.getRectSize(rect);
-		//GridView gridView = (GridView) findViewById(R.id.gridview);
+		gridView = (GridView) findViewById(R.id.gridview);
 		gridView.setAdapter(new ImageAdapter(this, rect.width()));
-		final TextView czteroTxt = (TextView) findViewById(R.id.czteroLiczba);
+		czteroTxt = (TextView) findViewById(R.id.czteroLiczba);
 		czteroTxt.setText(Integer.toString(cztero));
-		final TextView trojTxt = (TextView) findViewById(R.id.trojLiczba);
+		czteroMaszt = (ImageView) findViewById(R.id.cztero);
+		trojTxt = (TextView) findViewById(R.id.trojLiczba);
 		trojTxt.setText(Integer.toString(troj));
-		final TextView dwuTxt = (TextView) findViewById(R.id.dwuLiczba);
+		trojMaszt = (ImageView) findViewById(R.id.troj);
+		dwuTxt = (TextView) findViewById(R.id.dwuLiczba);
 		dwuTxt.setText(Integer.toString(dwu));
-		final TextView jednoTxt = (TextView) findViewById(R.id.jednoLiczba);
+		dwuMaszt = (ImageView) findViewById(R.id.dwu);
+		jednoTxt = (TextView) findViewById(R.id.jednoLiczba);
 		jednoTxt.setText(Integer.toString(jedno));
+		jednoMaszt = (ImageView) findViewById(R.id.jedno);
+		
 		right = (Button) this.findViewById(R.id.right);
 		right.setOnClickListener(this);
 		zatwierdz = (Button) this.findViewById(R.id.zatwierdz);
 		zatwierdz.setOnClickListener(this);
 		right.setVisibility(View.GONE);
+		
 				
 		gridView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View imgView,
@@ -65,34 +73,47 @@ public class Gra extends Activity implements OnClickListener {
 					trojTxt.setText(Integer.toString(troj));
 					dwuTxt.setText(Integer.toString(dwu));
 					jednoTxt.setText(Integer.toString(jedno));
-				}				
+				}
 			}
 		});
 	}
 	
-	public void strzal(ArrayList<Integer> plansza) {		
+	public static void strzal() {
 		Random losuj = new Random();
-		int position = losuj.nextInt(100);
-		ViewGroup gridChild = (ViewGroup) gridView.getChildAt(position);
-		int childSize = gridChild.getChildCount();
-		for (int k = 0; k < childSize; k++) {
-			if (gridChild.getChildAt(k) instanceof ImageView) {
-				ImageView imV = (ImageView) gridChild.getChildAt(k);
-				imV.setImageResource(R.drawable.wybrane);
-			}
+		int position = losuj.nextInt(100);		
+		View myTopView = gridView.getChildAt(position);
+	    ArrayList<View> allViewsWithinMyTopView = getAllChildren(myTopView);	    
+	    for (View child : allViewsWithinMyTopView) {
+	    	if (child instanceof ImageView) {
+	        	ImageView imV = (ImageView) child;
+	        	if (plansza.get(position) == 2) {	        		
+					imV.setImageResource(R.drawable.trafiony);
+					plansza.set(position, 4);
+					strzal();
+				} else if (plansza.get(position) == 1) {					
+					imV.setImageResource(R.drawable.pudlo);
+					plansza.set(position, 3);
+				}
+	        }
+	    }	    
+	}
+	
+	private static ArrayList<View> getAllChildren(View v) {
+		if (!(v instanceof ViewGroup)) {
+			ArrayList<View> viewArrayList = new ArrayList<View>();
+			viewArrayList.add(v);
+			return viewArrayList;
 		}
-		/*if (plansza.get(position) == 2) {
-			imV.setImageResource(R.drawable.trafiony);
-			plansza.set(position, 4);
-			strzal(plansza);
-		} else if (plansza.get(position) == 1) {
-			imV.setImageResource(R.drawable.pudlo);
-			plansza.set(position, 3);
-			Intent intent = new Intent();
-			intent.setClassName(getApplicationContext(),"com.example.statki.PlanszaPrzeciwnika");
-			startActivity(intent);
-			overridePendingTransition(R.anim.from_right, R.anim.to_left);
-		}*/
+		ArrayList<View> result = new ArrayList<View>();
+		ViewGroup vg = (ViewGroup) v;
+		for (int i = 0; i < vg.getChildCount(); i++) {
+			View child = vg.getChildAt(i);
+			ArrayList<View> viewArrayList = new ArrayList<View>();
+			viewArrayList.add(v);
+			viewArrayList.addAll(getAllChildren(child));
+			result.addAll(viewArrayList);
+		}
+		return result;
 	}
 
 	private void wyborPola(int position, ImageView imageView) {
@@ -281,18 +302,12 @@ public class Gra extends Activity implements OnClickListener {
 
 	private void zeruj(ArrayList<Integer> plansza2, int position, int a, int b,
 			int c, int d, int e, int f) {
-		if (a != 0)
-			plansza2.set(position + 1, 1);
-		if (b != 0)
-			plansza2.set(position + 2, 1);
-		if (c != 0)
-			plansza2.set(position + 3, 1);
-		if (d != 0)
-			plansza2.set(position + 10, 1);
-		if (e != 0)
-			plansza2.set(position + 20, 1);
-		if (f != 0)
-			plansza2.set(position + 30, 1);
+		if (a != 0) plansza2.set(position + 1, 1);
+		if (b != 0) plansza2.set(position + 2, 1);
+		if (c != 0) plansza2.set(position + 3, 1);
+		if (d != 0) plansza2.set(position + 10, 1);
+		if (e != 0) plansza2.set(position + 20, 1);
+		if (f != 0) plansza2.set(position + 30, 1);
 	}
 
 	private void ustawPole(int position, ImageView imageView) {
@@ -324,13 +339,21 @@ public class Gra extends Activity implements OnClickListener {
 				zatwierdzPlansze = true;
 				zatwierdz.setVisibility(View.GONE);
 				right.setVisibility(View.VISIBLE);
+				czteroTxt.setVisibility(View.GONE);
+				czteroMaszt.setVisibility(View.GONE);
+				trojTxt.setVisibility(View.GONE);
+				trojMaszt.setVisibility(View.GONE);
+				dwuTxt.setVisibility(View.GONE);
+				dwuMaszt.setVisibility(View.GONE);
+				jednoTxt.setVisibility(View.GONE);
+				jednoMaszt.setVisibility(View.GONE);
 				intent.setClassName(getApplicationContext(),
 						"com.example.statki.PlanszaPrzeciwnika");
 				startActivity(intent);
 				overridePendingTransition(R.anim.from_right, R.anim.to_left);
 			} else {
 				Toast.makeText(getApplicationContext(),
-						"Nie ustawiono wszystkich statków.", Toast.LENGTH_SHORT).show();
+						"B³êdna liczba statków.", Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
