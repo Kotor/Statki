@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -91,10 +90,7 @@ public class Gra extends Activity implements OnClickListener {
 	    for (View child : allViewsWithinMyTopView) {
 	    	if (child instanceof ImageView) {
 	    		ImageView imV = (ImageView) child;
-	    		Log.i("b", "c");
-	        	Log.i("a", Integer.toString(plansza.get(position)));
 	        	if (plansza.get(position) == 2) {
-	        		Log.i("a", "k1");
 					imV.setImageResource(R.drawable.trafiony);
 					wszystkie--;
 					plansza.set(position, 4);

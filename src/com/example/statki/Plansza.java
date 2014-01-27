@@ -2,8 +2,6 @@ package com.example.statki;
 
 import java.util.ArrayList;
 
-import android.util.Log;
-
 public class Plansza {
 	private static Plansza inst;	
 	private ArrayList<Integer> planszaGry;

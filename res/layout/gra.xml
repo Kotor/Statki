@@ -9,6 +9,7 @@ android:orientation="horizontal" >
 	    android:id="@+id/gridview"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
+	    android:listSelector="@android:color/transparent"
 	    android:numColumns="10" > 
     </GridView>
     
@@ -17,14 +18,14 @@ android:orientation="horizontal" >
         android:layout_width="fill_parent"
     	android:layout_height="wrap_content"
     	android:layout_below="@id/gridview"
-    	android:text="Dostępne statki:" />
+    	android:text="@string/dostepneStatki" />
 	<ImageView
         android:id="@+id/cztero"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="5dp"
         android:paddingTop="5dp"
-        android:contentDescription="Czteromasztowiec"
+        android:contentDescription="@string/czteromasztowiec"
         android:layout_below="@id/dostepne"
         android:src="@drawable/cztero" />
 	<TextView
@@ -39,7 +40,7 @@ android:orientation="horizontal" >
         android:layout_height="wrap_content"
         android:paddingBottom="5dp"
         android:paddingTop="5dp"
-        android:contentDescription="Trójmasztowiec"
+        android:contentDescription="@string/trojmasztowiec"
         android:layout_below="@id/cztero"
         android:src="@drawable/troj" />
 		<TextView
@@ -54,7 +55,7 @@ android:orientation="horizontal" >
         android:layout_height="wrap_content"
         android:paddingBottom="5dp"
         android:paddingTop="5dp"
-        android:contentDescription="Dwumasztowiec"
+        android:contentDescription="@string/dwumasztowiec"
         android:layout_below="@id/troj"
         android:src="@drawable/dwu" />
 		<TextView
@@ -69,7 +70,7 @@ android:orientation="horizontal" >
         android:layout_height="wrap_content"
         android:paddingBottom="5dp"
         android:paddingTop="5dp"
-        android:contentDescription="Jednomasztowiec"
+        android:contentDescription="@string/jednomasztowiec"
         android:layout_below="@id/dwu"
         android:src="@drawable/jedno" />
 		<TextView
@@ -81,17 +82,19 @@ android:orientation="horizontal" >
    	
 	<Button
         android:id="@+id/right"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:layout_below="@id/jednoLiczba"
         android:layout_centerHorizontal="true"
-        android:text="Plansza przeciwnika" />
+        android:text="@string/planszaPrzeciwnikaButton" />
 	<Button
         android:id="@+id/zatwierdz"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:layout_below="@id/jednoLiczba"
         android:layout_centerHorizontal="true"
-        android:text="Zatwierdź statki" />
+        android:text="@string/zatwierdzButton" />
 
 </RelativeLayout>

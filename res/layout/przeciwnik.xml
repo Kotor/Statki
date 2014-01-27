@@ -9,15 +9,17 @@ android:orientation="horizontal" >
 	    android:id="@+id/gridview"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
+	    android:listSelector="@android:color/transparent"
 	    android:numColumns="10" > 
     </GridView>
        	
     <Button
         android:id="@+id/left"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:layout_below="@id/gridview"
         android:layout_centerHorizontal="true"
-        android:text="Plansza gracza" />
+        android:text="@string/planszaGraczaButton" />
 
 </RelativeLayout>

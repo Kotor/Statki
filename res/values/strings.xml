@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Statki</string>
+    <string name="app_name">STATKI</string>
     <string name="action_settings">Settings</string>
     <string name="kontynuacja">Kontynuacja</string>
     <string name="nowaGra">Nowa gra</string>
@@ -9,6 +9,14 @@
     <string name="wyjscie">Wyjście</string>
     <string name="informacjeTresc">Gra stworzona w ramach projektu na zajęcia
          z Nowoczesnych Języków Programowania Obiektowego. Gra polega na zatopieniu
-         statków przeciwnika odgadując ich położenie na planszy.</string>    
+         statków przeciwnika odgadując ich położenie na planszy.</string>
+    <string name="dostepneStatki">Dostępne statki:</string>    
+    <string name="czteromasztowiec">Czteromasztowiec</string>  
+    <string name="trojmasztowiec">Trójmasztowiec</string>  
+    <string name="dwumasztowiec">Dwumasztowiec</string>  
+    <string name="jednomasztowiec">Jednomasztowiec</string>  
+    <string name="planszaPrzeciwnikaButton">Plansza przeciwnika</string>
+    <string name="planszaGraczaButton">Plansza gracza</string>
+    <string name="zatwierdzButton">Zatwierdź statki</string>
 
 </resources>
